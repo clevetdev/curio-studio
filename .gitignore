@@ -1,0 +1,7 @@
+node_modules/
+models
+out/
+build/
+public/audio.wav
+public/timeline.json
+__pycache__/
