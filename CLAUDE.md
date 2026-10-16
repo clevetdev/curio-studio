@@ -9,3 +9,11 @@ Fully generated vertical science shorts (1080×1920, ~50 s, French). Brand: "CUR
 - Network: Hugging Face is blocked here; models come from GitHub releases.
 - Review renders by extracting frames with ffmpeg; nobody can listen in the container, so audio choices need the user's ears.
 - Scripts must be fact-checked; content is in French.
+
+## Git
+- Commit identity: `clevetdev <corentin.levet@epitech.eu>` (set it with `git config user.name/user.email` in this repo).
+- Commits must NOT be signed (`git config commit.gpgsign false`, commit with `--no-gpg-sign`): the cloud signing key isn't on the user's GitHub account, so signed commits show "Unverified".
+- Commit messages in English.
+
+## Project state
+See `docs/journal.md` for decisions made so far and open questions.
