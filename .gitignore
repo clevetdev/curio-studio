@@ -5,3 +5,4 @@ build/
 public/audio.wav
 public/timeline.json
 __pycache__/
+.venvs/

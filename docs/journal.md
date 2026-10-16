@@ -52,7 +52,17 @@ Claude ne peut pas écouter l'audio. Ces quatre points bloquent la suite du peau
    (Resemble AI, licence MIT donc usage commercial permis, gère le français, clonage de voix). À éviter pour une
    chaîne monétisée : XTTS-v2 et Fish Speech, dont les licences interdisent l'usage commercial. Leurs modèles sont
    sur Hugging Face, ce qui est accessible en local mais bloqué en session cloud.
-   Extraits d'origine (Kokoro ff_siwis brut, Kokoro traité, Piper siwis, Piper tom, Piper upmc 0 et 1) : `out\voix\`. La v2 utilise **Kokoro ff_siwis traité**. Lequel garder ?
+   Extraits d'origine (Kokoro ff_siwis brut, Kokoro traité, Piper siwis, Piper tom, Piper upmc 0 et 1) : `out\voix\`.
+   **Test Chatterbox : écarté pour l'instant (16 octobre 2026).** Verdict de l'utilisateur : les versions 2 et 3
+   ont un accent bizarre, très nasal (la voix de référence par défaut de Chatterbox n'est pas francophone), et la 4
+   n'est qu'une moins bonne copie de la 1. **On garde Kokoro ff_siwis brut.** Si on y revient, il faudra donner à
+   Chatterbox un vrai enregistrement de référence en français (sa propre voix, ou un clip sous licence libre).
+   Détail du test : `out\comparaison\` contient la même phrase,
+   au même volume, en 4 versions (1 Kokoro, 2 Chatterbox par défaut, 3 Chatterbox plus expressif, 4 Chatterbox
+   avec le timbre de Kokoro cloné). Installation : venv isolé `.venvs\chatterbox` (ignoré par git), avec
+   PyTorch 2.11 cu128, car la RTX 5070 Ti (Blackwell, sm_120) n'est pas gérée par le `torch==2.6.0` qu'impose
+   chatterbox-tts 0.1.7. Il faut donc installer `pip install chatterbox-tts --no-deps`, puis ses dépendances à la
+   main, et écrire les WAV avec soundfile (torchaudio 2.11 réclame torchcodec). Environ 2,5 à 6 s par phrase. La v2 utilise **Kokoro ff_siwis traité**. Lequel garder ?
    Pour les régénérer : voir « Régénérer le casting voix » plus bas.
 2. **Rythme** : trop rapide, trop lent, ou bon ?
 3. **Musique et bruitages** : volume et style.
