@@ -8,9 +8,11 @@ const mixCol = (a: string, b: string, t: number) => `color-mix(in oklab, ${a} ${
 
 // ---------------------------------------------------------------- Fenêtre de ciel (accroche + boucle)
 
-const SkyWindow: React.FC<{ toBlue: number; word: string; wordP: number; strike?: number; mood: "happy" | "confused" | "wink"; lumiP: number }> =
-  ({ toBlue, word, wordP, strike = 0, mood, lumiP }) => {
-    const f = useCurrentFrame();
+const SkyWindow: React.FC<{ toBlue: number; word: string; wordP: number; strike?: number; mood: "happy" | "confused" | "wink"; lumiP: number; cloudT?: number }> =
+  ({ toBlue, word, wordP, strike = 0, mood, lumiP, cloudT }) => {
+    const frame = useCurrentFrame();
+    const f = cloudT ?? frame;
+    const fl = frame;
     const top = mixCol("#7B2FF7", "#1E7BFF", toBlue);
     const bot = mixCol("#D58BFF", "#9ADFFF", toBlue);
     return (
@@ -22,7 +24,7 @@ const SkyWindow: React.FC<{ toBlue: number; word: string; wordP: number; strike?
         }}>
           {/* nuages */}
           {[[120, 160, 1], [560, 90, 0.8], [420, 320, 0.6]].map(([x, y, s], i) => (
-            <div key={i} style={{ position: "absolute", left: x + ((f * (0.6 + i * 0.3)) % 1100) - 200, top: y, width: 220 * s, height: 70 * s, borderRadius: 50, background: "rgba(255,255,255,0.35)" }} />
+            <div key={i} style={{ position: "absolute", left: x + ((((f * (0.6 + i * 0.3)) % 1100) + 1100) % 1100) - 200, top: y, width: 220 * s, height: 70 * s, borderRadius: 50, background: "rgba(255,255,255,0.35)" }} />
           ))}
           {/* collines */}
           <svg width={900} height={860} style={{ position: "absolute" }}>
@@ -39,7 +41,7 @@ const SkyWindow: React.FC<{ toBlue: number; word: string; wordP: number; strike?
             </span>
           </div>
         </div>
-        {lumiP > 0.01 && <Lumi x={540} y={1150} size={150} mood={mood} scale={lumiP} look={Math.sin(f / 20)} />}
+        {lumiP > 0.01 && <Lumi x={540} y={1150} size={150} mood={mood} scale={lumiP} look={Math.sin(fl / 20)} />}
       </>
     );
   };
@@ -57,22 +59,23 @@ export const Hook: React.FC = () => {
   );
 };
 
+/** Boucle : « …souviens-toi que… » se termine exactement sur la première image de l'accroche
+ *  (titre « LE CIEL DEVRAIT ÊTRE… », fenêtre violette, pas de mot, pas de Lumi). */
 export const Loop: React.FC = () => {
   const { dur } = useScene();
+  const f = useCurrentFrame();
   const blueP = useBeatPop(0, -2);
-  const toViolet = useRamp(useBeat(1, -4), useBeat(1, 6));
-  const wordP = useBeatPop(1, -2, 9);
-  const titleP = useRamp(dur - 20, dur - 8);
+  const back = useRamp(useBeat(1, -2), Math.min(useBeat(1, 16), dur - 4));
   return (
     <AbsoluteFill>
-      <div style={{ opacity: 1 - titleP }}>
+      <div style={{ opacity: Math.max(0, 1 - back / 0.4) }}>
         <Title y={150} size={100} at={0}>LA PROCHAINE<br />FOIS…</Title>
       </div>
-      <div style={{ opacity: titleP }}>
+      <div style={{ opacity: Math.max(0, (back - 0.4) / 0.6) }}>
         <Title y={150} size={100} at={-30}>LE CIEL<br />DEVRAIT ÊTRE…</Title>
       </div>
-      <SkyWindow toBlue={blueP * (1 - toViolet)} word={toViolet > 0.5 ? "VIOLET" : "BLEU ?"} wordP={toViolet > 0.5 ? wordP : blueP * (1 - toViolet * 2)}
-        mood="wink" lumiP={1 - titleP} />
+      {/* nuages calés pour que l'image suivante soit l'image 0 de l'accroche */}
+      <SkyWindow toBlue={blueP * (1 - back)} word="BLEU ?" wordP={blueP * (1 - back)} mood="wink" lumiP={blueP * (1 - back)} cloudT={f - dur} />
     </AbsoluteFill>
   );
 };
@@ -214,6 +217,7 @@ export const Scatter: React.FC = () => {
       </svg>
       <Label x={540} y={290} at={2} color={C.red} size={46}>onde longue : passe tout droit</Label>
       <Label x={290} y={530} at={useBeat(0, -3)} color={C.blue} size={46}>onde courte</Label>
+      <Title y={150} size={66} at={useBeat(3, -3)} color={C.lumi}>DIFFUSION DE RAYLEIGH</Title>
       <Bar x={360} base={1240} h={70} color={C.red} label="×1" grow={bars} />
       <Bar x={720} base={1240} h={70 + 340 * six} color={C.blue} label={six > 0.1 ? "×6" : ""} grow={bars} />
     </AbsoluteFill>
@@ -385,7 +389,59 @@ export const Sunset: React.FC = () => {
   );
 };
 
+// ---------------------------------------------------------------- Sur Mars : ciel orangé, coucher bleu
+
+// beats : 0 « ciel » (change d'air…), 1 « Mars », 2 « poussière », 3 « orangé », 4 « bleu »
+export const Mars: React.FC = () => {
+  const f = useCurrentFrame();
+  const toMars = useRamp(useBeat(1, -8), useBeat(1, 10));
+  const dust = useRamp(useBeat(2, -4), useBeat(2, 16));
+  const day = useRamp(useBeat(3, -10), useBeat(3, 8));
+  const set = useRamp(useBeat(3, 10), useBeat(4, 0));
+  const blue = useRamp(useBeat(4, -8), useBeat(4, 14));
+  const wow = useBeatPop(4, 2, 9);
+  const R = 950, cx = 540, cy = 2000;
+  const sx = interpolate(set, [0, 1], [720, 330]), sy = interpolate(set, [0, 1], [430, 1010]);
+  return (
+    <AbsoluteFill>
+      {/* d'abord la Terre (halo bleu), puis Mars */}
+      <svg width={1080} height={1920} style={{ position: "absolute", opacity: 1 - toMars }}>
+        <circle cx={cx} cy={cy} r={R + 260} fill="#62C3FF" opacity={0.35} />
+      </svg>
+      <AbsoluteFill style={{ background: "linear-gradient(180deg, #C98A4B, #E7B57A 70%)", opacity: day * (1 - 0.75 * blue) }} />
+      <svg width={1080} height={1920} style={{ position: "absolute", opacity: dust * (1 - 0.6 * blue) }}>
+        {Array.from({ length: 46 }, (_, i) => (
+          <circle key={i} cx={(i * 233 + f * (0.8 + (i % 4) * 0.3)) % 1080} cy={260 + ((i * 137) % 760) + 10 * Math.sin(f / 14 + i)}
+            r={3 + (i % 3) * 2} fill="#F0B27A" opacity={0.75} />
+        ))}
+      </svg>
+      <svg width={1080} height={1920} style={{ position: "absolute" }}>
+        <defs>
+          <radialGradient id="marsglow">
+            <stop offset="0%" stopColor="#BFE6FF" stopOpacity={0.95} />
+            <stop offset="45%" stopColor={C.sky} stopOpacity={0.6} />
+            <stop offset="100%" stopColor={C.blue} stopOpacity={0} />
+          </radialGradient>
+        </defs>
+        <circle cx={sx} cy={sy} r={380 * blue} fill="url(#marsglow)" />
+        <circle cx={sx} cy={sy} r={55} fill="#FFF6E0" style={{ filter: "drop-shadow(0 0 30px #FFF6E0)" }} />
+        <circle cx={cx} cy={cy} r={R} fill={mixCol("#0E1A4A", "#7A2E1A", toMars)} stroke={mixCol("#2A3A88", "#B8552E", toMars)} strokeWidth={6} />
+        {[[300, 1120, 40], [700, 1180, 26], [520, 1260, 18]].map(([x, y, rr], i) => (
+          <ellipse key={i} cx={x} cy={y} rx={rr * 1.6} ry={rr * 0.6} fill="#5E2213" opacity={toMars} />
+        ))}
+      </svg>
+      {wow > 0.01 && <Lumi x={800} y={880} size={130} mood="surprised" scale={wow} look={-Math.abs(Math.sin(f / 25))} />}
+      <div style={{ opacity: 1 - toMars }}>
+        <Title y={170} size={96} at={2}>AUTRE AIR,<br />AUTRE CIEL</Title>
+      </div>
+      <Title y={170} size={110} at={useBeat(1, -4)} color={C.orange}>SUR MARS…</Title>
+      <div style={{ opacity: 1 - set }}><Label x={540} y={1000} at={useBeat(2, 2)} color="#F0B27A" size={52}>poussière en suspension</Label></div>
+      <Title y={330} size={72} at={useBeat(4, -2)} color={C.sky}>COUCHER BLEU !</Title>
+    </AbsoluteFill>
+  );
+};
+
 export const SCENES: Record<string, React.FC> = {
   hook: Hook, intro: Intro, spectrum: Spectrum, molecules: Molecules, scatter: Scatter, fill: Fill,
-  violet: Violet, reasons: Reasons, brain: Brain, sunset: Sunset, loop: Loop,
+  violet: Violet, reasons: Reasons, brain: Brain, sunset: Sunset, mars: Mars, loop: Loop,
 };

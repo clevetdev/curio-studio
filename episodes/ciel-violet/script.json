@@ -1,6 +1,7 @@
 {
   "title": "Pourquoi le ciel n'est pas violet",
   "tts": { "engine": "kokoro", "voice": "ff_siwis", "speed": 1.06, "fx": false },
+  "say": { "Rayleigh": "Rélé" },
   "scenes": [
     { "visual": "hook",      "beats": ["violet", "bleu"],
       "text": "Le ciel devrait être violet. Et pourtant, tu le vois bleu." },
@@ -10,19 +11,21 @@
       "text": "Sa lumière paraît blanche, mais c'est un mélange de toutes les couleurs." },
     { "visual": "molecules", "beats": ["azote", "oxygène", "mille"],
       "text": "En entrant dans l'atmosphère, elle croise des molécules d'azote et d'oxygène, plus de mille fois plus petites que ses ondes." },
-    { "visual": "scatter",   "beats": ["courtes", "bleu", "six"],
-      "text": "Et ces molécules dévient surtout les ondes courtes. Le bleu est éparpillé près de six fois plus que le rouge." },
+    { "visual": "scatter",   "beats": ["courtes", "bleu", "six", "rayleigh"],
+      "text": "Et ces molécules dévient surtout les ondes courtes : c'est la diffusion de Rayleigh. Le bleu est éparpillé près de six fois plus que le rouge." },
     { "visual": "fill",      "beats": ["directions", "ciel"],
       "text": "Éparpillé dans toutes les directions, c'est lui qui remplit le ciel." },
     { "visual": "violet",    "beats": ["violet", "plus", "violet#2"],
       "text": "Mais le violet est éparpillé encore plus. Alors, pourquoi pas un ciel violet ?" },
     { "visual": "reasons",   "beats": ["d'abord", "ensuite"],
       "text": "D'abord, le Soleil émet moins de violet que de bleu. Ensuite, nos yeux sont peu sensibles au violet." },
-    { "visual": "brain",     "beats": ["mélange", "bleu"],
-      "text": "Notre cerveau mélange tout ce qui vient du ciel, et le résultat, c'est ce bleu clair." },
+    { "visual": "brain",     "beats": ["mélange", "bleu#2"],
+      "text": "Notre cerveau mélange tout ce qui vient du ciel : un peu de violet, beaucoup de bleu, un peu de vert… et le résultat, c'est ce bleu clair." },
     { "visual": "sunset",    "beats": ["air", "perd", "orange"],
       "text": "Et au coucher du soleil ? La lumière traverse bien plus d'air. Le bleu se perd en chemin, il ne reste que l'orange et le rouge." },
-    { "visual": "loop",      "beats": ["bleu", "violet"],
-      "text": "Alors la prochaine fois qu'on te dit que le ciel est bleu, souviens-toi : il devrait être violet." }
+    { "visual": "mars",      "beats": ["ciel", "mars", "poussière", "orangé", "bleus"],
+      "text": "Change d'air, et tu changes de ciel. Sur Mars, c'est de la poussière qui dévie la lumière : le ciel y est orangé le jour, et ses couchers de soleil sont bleus !" },
+    { "visual": "loop",      "beats": ["bleu", "souviens-toi"],
+      "text": "Alors la prochaine fois qu'on te dit que le ciel est bleu, souviens-toi que…" }
   ]
 }

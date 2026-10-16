@@ -8,16 +8,21 @@ import { SCENES } from "./scenes";
 
 const Background: React.FC = () => {
   const f = useCurrentFrame();
+  const { durationInFrames: D } = useVideoConfig();
+  // Mouvements périodiques sur la durée totale : la dernière image enchaîne sur la première (boucle).
+  // a(k) ≈ f / k, arrondi pour faire un nombre entier de tours ; drift(v) ≈ f × v, arrondi à un nombre entier d'écrans.
+  const a = (k: number) => (2 * Math.PI * Math.max(1, Math.round(D / (2 * Math.PI * k))) * f) / D;
+  const drift = (v: number) => (Math.max(1, Math.round((v * D) / 1920)) * 1920 * f) / D;
   return (
     <AbsoluteFill style={{ background: `radial-gradient(ellipse at 50% 30%, ${C.bg2}, ${C.bg1} 70%)` }}>
-      <div style={{ position: "absolute", left: 200 + 120 * Math.sin(f / 90), top: 300 + 80 * Math.cos(f / 110), width: 700, height: 700,
+      <div style={{ position: "absolute", left: 200 + 120 * Math.sin(a(90)), top: 300 + 80 * Math.cos(a(110)), width: 700, height: 700,
         borderRadius: "50%", background: `radial-gradient(circle, ${C.violet}22, transparent 70%)` }} />
-      <div style={{ position: "absolute", left: 300 + 100 * Math.cos(f / 100), top: 1000 + 90 * Math.sin(f / 80), width: 800, height: 800,
+      <div style={{ position: "absolute", left: 300 + 100 * Math.cos(a(100)), top: 1000 + 90 * Math.sin(a(80)), width: 800, height: 800,
         borderRadius: "50%", background: `radial-gradient(circle, ${C.blue}1E, transparent 70%)` }} />
       <svg width={1080} height={1920} style={{ position: "absolute" }}>
         {Array.from({ length: 70 }, (_, i) => (
-          <circle key={i} cx={(i * 397) % 1080} cy={(i * 661 + f * (0.25 + (i % 3) * 0.2)) % 1920} r={1.2 + (i % 3)}
-            fill="white" opacity={0.25 + 0.35 * Math.abs(Math.sin(f / 20 + i))} />
+          <circle key={i} cx={(i * 397) % 1080} cy={(i * 661 + drift(0.25 + (i % 3) * 0.2)) % 1920} r={1.2 + (i % 3)}
+            fill="white" opacity={0.25 + 0.35 * Math.abs(Math.sin(a(20) + i))} />
         ))}
       </svg>
     </AbsoluteFill>
@@ -28,7 +33,7 @@ const Background: React.FC = () => {
 
 const WORD_COLORS: [RegExp, string][] = [
   [/violet/i, C.violet], [/bleu/i, C.sky], [/rouge/i, C.red], [/orange/i, C.orange],
-  [/soleil/i, C.yellow], [/blanche/i, "#FFFFFF"], [/mille|six/i, C.green],
+  [/soleil/i, C.yellow], [/blanc/i, "#FFFFFF"], [/mille|six/i, C.green],
 ];
 
 const Captions: React.FC = () => {
@@ -73,7 +78,7 @@ const SceneWrap: React.FC<{ dur: number; first: boolean; last: boolean; children
   const f = useCurrentFrame();
   const inP = first ? 1 : interpolate(f, [0, 9], [0, 1], { ...clamp, easing: (x) => 1 - Math.pow(1 - x, 3) });
   const outP = last ? 0 : interpolate(f, [dur - 7, dur], [0, 1], clamp);
-  const drift = 1 + 0.03 * (f / dur);
+  const drift = last ? 1 : 1 + 0.03 * (f / dur); // la dernière image doit être identique à la première (boucle)
   const scale = (1 + 0.18 * (1 - inP)) * (1 - 0.12 * outP) * drift;
   const blur = 14 * (1 - inP) + 14 * outP;
   return (
@@ -91,7 +96,7 @@ export const Video: React.FC = () => {
       <Background />
       {timeline.scenes.map((s, i) => {
         const from = Math.round(s.start * fps) - (i === 0 ? Math.round(s.start * fps) : 0);
-        const end = i === n - 1 ? Math.ceil((s.end + 0.6) * fps) : Math.round(s.end * fps);
+        const end = i === n - 1 ? timeline.durationInFrames : Math.round(s.end * fps);
         const dur = end - from;
         const Scene = SCENES[s.visual];
         const beats = s.beats.map((b) => Math.round(b * fps) - from);

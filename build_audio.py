@@ -16,7 +16,7 @@ FPS = 30
 LEAD = 0.12       # la voix démarre quasi immédiatement : l'accroche doit tomber dans la 1re seconde
 SENT_GAP = 0.22   # pause entre deux phrases d'une même scène
 SCENE_GAP = 0.30  # pause entre deux scènes
-TAIL = 0.6
+TAIL = 0.1        # court : la vidéo boucle, la fin enchaîne sur l'accroche (« souviens-toi que… le ciel devrait être violet »)
 
 ep = Path(sys.argv[1])
 script = json.loads((ep / "script.json").read_text(encoding="utf-8"))
@@ -32,6 +32,8 @@ _piper = None
 
 def synth(text):
     global _piper
+    for written, spoken in script.get("say", {}).items():  # prononciation forcée, les sous-titres gardent l'orthographe
+        text = re.sub(rf"\b{re.escape(written)}\b", spoken, text)
     if cfg["engine"] == "kokoro":
         s, sr = _kokoro.create(text, voice=cfg["voice"], speed=cfg["speed"], lang="fr-fr")
     else:  # piper via sherpa-onnx, cfg["voice"] = ex. "fr_FR-tom-medium"
@@ -216,7 +218,7 @@ hats = hp(hats, 7000)
 arp = arp + 0.35 * np.pad(arp, (int(BEAT * 0.75 * SR), 0))[:N]  # écho synchronisé
 music = (0.35 * pad / np.abs(pad).max() + 0.5 * bass / np.abs(bass).max() + 0.32 * arp / np.abs(arp).max()
          + 0.10 * hats / max(1e-9, np.abs(hats).max()) + 0.45 * kick / np.abs(kick).max())
-music *= np.clip(tt / 0.15, 0, 1) * np.clip((total - tt) / 1.2, 0, 1)
+music *= np.clip(tt / 0.15, 0, 1) * np.clip((total - tt) / 0.3, 0, 1)  # fondus courts pour la boucle
 
 # ducking : la musique baisse quand la voix parle
 r, n = frame_rms(voice, 0.02)
@@ -249,12 +251,6 @@ def pop():
     return np.exp(-s * 35) * np.sin(2 * np.pi * np.cumsum(f) / SR)
 
 
-def ding(f=1318.5):
-    n = int(1.2 * SR)
-    s = np.arange(n) / SR
-    return sum(a * np.exp(-s * d) * np.sin(2 * np.pi * f * m * s) for m, a, d in [(1, 1, 4), (2.76, 0.4, 7), (5.4, 0.2, 11)])
-
-
 sfx = np.zeros(N)
 
 
@@ -272,7 +268,7 @@ for i, sc in enumerate(scenes):
         place(W, sc["start"] - 0.3, 0.22)
     for k, bt in enumerate(sc["beats"]):
         place(pop(), bt, 0.16)
-place(ding(), scenes[-1]["beats"][-1], 0.12)
+# pas de note finale : la vidéo boucle, la fin doit enchaîner sur l'accroche
 
 # ---------------------------------------------------------------- Mixage
 

@@ -28,8 +28,8 @@ La piste « trading » a été étudiée puis écartée (aucun avantage réel su
 - Outils : tout est gratuit et tourne en local (Kokoro / Piper pour la voix, musique et bruitages générés par calcul,
   Remotion pour l'animation). Aucun service payant.
 
-## Épisode 1 : « Pourquoi le ciel n'est pas violet » (v2, ~52 s)
-Script dans `episodes/ciel-violet/script.json`, 11 scènes définies dans `src/scenes.tsx`.
+## Épisode 1 : « Pourquoi le ciel n'est pas violet » (v3, 62,2 s)
+Script dans `episodes/ciel-violet/script.json`, 12 scènes définies dans `src/scenes.tsx`.
 
 Science vérifiée :
 - Diffusion de Rayleigh, intensité ∝ 1/λ⁴ → le bleu (450 nm) est diffusé ≈ 6× plus que le rouge (700 nm), le violet ≈ 9×.
@@ -37,12 +37,25 @@ Science vérifiée :
 - L'argument « absorption en haute altitude », présent en v1, a été **retiré** : son effet est marginal.
 - Les deux courbes affichées à l'écran sont de vraies données (spectre solaire simplifié et V(λ)), dans `src/scenes.tsx`.
 - Coucher de soleil : la lumière traverse ≈ 40× plus d'air à l'horizon qu'au zénith.
+- Mars (ajout v3, amené comme conséquence du principe : « change d'air, et tu changes de ciel ») : la poussière en suspension rend le ciel orangé le jour, et ses fines particules renvoient le bleu
+  vers l'avant, d'où des couchers de soleil bleutés autour du Soleil (observés par les rovers de la NASA).
 
 Choix de réalisation :
-- L'accroche tombe dans la première seconde ; la dernière image reprend la première pour que la vidéo boucle.
+- L'accroche tombe dans la première seconde.
+- **Boucle parfaite (v3)** : le texte finit sur « …souviens-toi que… » et repart sur « Le ciel devrait être violet ».
+  La dernière image est identique à la première (nuages recalés, fond étoilé périodique sur la durée totale,
+  pas de zoom sur la dernière scène) ; silence final de 0,1 s, fondu musical de 0,3 s, plus de note finale.
+- **Durée > 60 s (v3)** : le programme de rémunération de TikTok exige des vidéos de plus d'une minute ; YouTube
+  Shorts n'a pas de minimum (maximum 3 min). Ajouts v3, tous au service du sujet : le nom « diffusion de Rayleigh »,
+  le détail du mélange (« un peu de violet, beaucoup de bleu, un peu de vert… ») et la scène Mars.
+- Intonation : éviter « … » en milieu de phrase. Le script coupe la phrase dessus, et Kokoro prononce le bout
+  restant seul (« bleu ! » sonnait faux). Pour Mars, l'utilisateur a choisi « …et ses couchers de soleil sont bleus ! ».
+  Une scène « nuages blancs » a été essayée puis **retirée** : l'utilisateur l'a jugée hors sujet, du remplissage.
+  Règle : chaque ajout doit servir la question de l'épisode, jamais combler.
+- Prononciation : bloc `"say"` du script (ex. `"Rayleigh": "Rélé"`) ; la voix dit la forme parlée, les
+  sous-titres gardent l'orthographe. Sans ça, Kokoro lit « Rayleigh » à l'anglaise.
 - Chaque animation est déclenchée par un mot prononcé (les `beats` du script).
-- Son : voix traitée (EQ, compression, réverbération légère), musique générée avec ducking, whoosh aux transitions,
-  pop sur chaque beat, note finale. Normalisé à -14 LUFS / -1,5 dBTP.
+- Son : voix Kokoro brute, musique générée avec ducking, whoosh aux transitions, pop sur chaque beat. Normalisé à -14 LUFS / -1,5 dBTP.
 
 ## EN ATTENTE : retours de l'utilisateur
 Claude ne peut pas écouter l'audio. Ces quatre points bloquent la suite du peaufinage :
@@ -64,7 +77,7 @@ Claude ne peut pas écouter l'audio. Ces quatre points bloquent la suite du peau
    chatterbox-tts 0.1.7. Il faut donc installer `pip install chatterbox-tts --no-deps`, puis ses dépendances à la
    main, et écrire les WAV avec soundfile (torchaudio 2.11 réclame torchcodec). Environ 2,5 à 6 s par phrase. La v2 utilise **Kokoro ff_siwis traité**. Lequel garder ?
    Pour les régénérer : voir « Régénérer le casting voix » plus bas.
-2. **Rythme** : trop rapide, trop lent, ou bon ?
+2. ~~**Rythme**~~ : jugé « pas mal » par l'utilisateur (v2). À réécouter sur la v3 (nouvelles scènes + boucle).
 3. **Musique et bruitages** : volume et style.
 4. **Scènes** : laquelle retravailler en priorité ?
 
