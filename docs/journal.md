@@ -105,7 +105,7 @@ Claude ne peut pas écouter l'audio. Ces quatre points bloquent la suite du peau
    main, et écrire les WAV avec soundfile (torchaudio 2.11 réclame torchcodec). Environ 2,5 à 6 s par phrase. La v2 utilise **Kokoro ff_siwis traité**. Lequel garder ?
    Pour les régénérer : voir « Régénérer le casting voix » plus bas.
 2. ~~**Rythme**~~ : jugé « pas mal » par l'utilisateur (v2). À réécouter sur la v3 (nouvelles scènes + boucle).
-3. **Musique et bruitages** : volume et style.
+3. ~~**Musique et bruitages**~~ **Validés le 16 octobre 2026** : l'utilisateur les juge « déjà pas mal », on les garde tels quels.
 4. **Scènes** : laquelle retravailler en priorité ?
 
 ## Prochaines étapes, une fois les retours obtenus
