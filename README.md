@@ -10,7 +10,20 @@ src/                          ← animations Remotion (brand.tsx = identité + m
 ```
 
 ## Installation
+
+Prérequis : Node 20+, Python 3.10+, ffmpeg, git.
+
+**Windows (PowerShell)**
+```powershell
+.\scripts\setup.ps1                   # ffmpeg (winget) + dépendances + modèles de voix (une seule fois)
+.\make.ps1 episodes\ciel-violet       # → out\ciel-violet.mp4
 ```
+
+**Linux, macOS, WSL**
+```bash
 ./scripts/setup.sh                    # dépendances + modèles de voix (une seule fois)
 ./make.sh episodes/ciel-violet        # → out/ciel-violet.mp4
 ```
+
+Où va quoi : `docs/journal.md` garde l'état du projet et les décisions ; `out/`, `models/` et `build/`
+ne sont pas versionnés (les vidéos se régénèrent, les modèles se retéléchargent).
