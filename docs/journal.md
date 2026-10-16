@@ -57,6 +57,33 @@ Choix de réalisation :
 - Chaque animation est déclenchée par un mot prononcé (les `beats` du script).
 - Son : voix Kokoro brute, musique générée avec ducking, whoosh aux transitions, pop sur chaque beat. Normalisé à -14 LUFS / -1,5 dBTP.
 
+## Référence de DA : V2F (analysée le 16 octobre 2026)
+L'utilisateur trouve que la DA des shorts de **V2F** (vulgarisation tech, en français) est celle qui lui correspond le mieux.
+Deux shorts ont été analysés image par image, avec leur transcription : « Internet manquera-t-il d'espace un jour ? »
+(HGpEJ15XrrU) et « Clavier 🗿🗿 » (DGil9nNpszA). L'audio n'a pas pu être écouté.
+- **Fond** : quasi noir, avec une texture discrète de courbes de niveau. Pas de dégradé coloré, pas d'étoiles.
+- **Objets** : de vraies photos détourées (touches, circuit imprimé, membrane, data center), avec ombre et léger halo.
+  Un rendu tangible, pas du dessin plat.
+- **Accents** : des lignes jaunes lumineuses (le courant qui circule) et des pastilles bleues qui brillent (« 0x1E »).
+  Peu de couleurs.
+- **Caméra** : zooms continus dans les objets (loupe, plongée dans le circuit). On explore un même objet plutôt que
+  d'enchaîner des scènes séparées.
+- **Humour** : un mème ou une image de culture populaire toutes les 5 à 10 s (panneau STOP, Jim Carrey, Ralph des
+  Simpson, erreur Windows XP, faux Doliprane). *Problème pour CURIO : ces images sont protégées par le droit d'auteur,
+  risquées pour une chaîne monétisée et un portfolio. Piste : faire de Lumi notre propre « mème » récurrent.*
+- **Texte à l'écran** : pas de sous-titres incrustés, seulement les chiffres et les mots-clés en gros
+  (« 63300 tiktoks », « 5 Mo », « 158646 To »).
+- **Narration** : directe, sans intro ni appel à s'abonner. Une chaîne de causes à effets, au tutoiement.
+  Environ 60 s, et le texte finit en pleine phrase pour boucler sur le début.
+- **Présentateur** : V2F apparaît parfois face caméra, ce que CURIO, entièrement généré, ne peut pas reprendre tel quel.
+
+**Prototype testé puis abandonné (16 octobre 2026).** On a fait un look « v2f » : fond quasi noir à courbes de niveau
+qui ondulent en vagues, molécules en volume, pastilles lumineuses, plongée de la caméra, sous-titres gardés.
+La scène `molecules` a été refaite dans ce style, et l'épisode complet a été comparé côte à côte avec la version actuelle.
+**Décision : après relecture par l'utilisateur et ses amis, on garde la DA CURIO d'origine** (fond nuit bleu-violet,
+étoiles, halos). Le code du prototype a été supprimé ; il reste dans l'historique de la session du 16 octobre 2026.
+À retenir quand même : les sous-titres mot à mot sont jugés « vraiment un plus » et restent.
+
 ## EN ATTENTE : retours de l'utilisateur
 Claude ne peut pas écouter l'audio. Ces quatre points bloquent la suite du peaufinage :
 1. ~~**Voix**~~ **Tranché le 16 octobre 2026 : Kokoro ff_siwis brut**, sans traitement (`"fx": false` dans le bloc
