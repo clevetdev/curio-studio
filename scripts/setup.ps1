@@ -1,4 +1,4 @@
-# Installation du studio sur Windows (PowerShell).
+﻿# Installation du studio sur Windows (PowerShell).
 #   .\scripts\setup.ps1
 # Installe ffmpeg si besoin, les dépendances npm/pip, puis télécharge les modèles de voix.
 $ErrorActionPreference = "Stop"

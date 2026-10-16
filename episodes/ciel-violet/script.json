@@ -1,6 +1,6 @@
 {
   "title": "Pourquoi le ciel n'est pas violet",
-  "tts": { "engine": "kokoro", "voice": "ff_siwis", "speed": 1.06 },
+  "tts": { "engine": "kokoro", "voice": "ff_siwis", "speed": 1.06, "fx": false },
   "scenes": [
     { "visual": "hook",      "beats": ["violet", "bleu"],
       "text": "Le ciel devrait être violet. Et pourtant, tu le vois bleu." },

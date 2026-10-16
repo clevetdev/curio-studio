@@ -1,4 +1,4 @@
-# Fabrique un épisode complet (son + vidéo).
+﻿# Fabrique un épisode complet (son + vidéo).
 #   .\make.ps1 episodes\ciel-violet   →   out\ciel-violet.mp4
 param([Parameter(Mandatory = $true)][string]$Episode)
 $ErrorActionPreference = "Stop"

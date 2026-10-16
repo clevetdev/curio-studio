@@ -46,8 +46,13 @@ Choix de réalisation :
 
 ## EN ATTENTE : retours de l'utilisateur
 Claude ne peut pas écouter l'audio. Ces quatre points bloquent la suite du peaufinage :
-1. **Voix** : 6 extraits ont été envoyés dans la session cloud (Kokoro ff_siwis brut, Kokoro traité, Piper siwis,
-   Piper tom, Piper upmc locuteurs 0 et 1). La v2 utilise **Kokoro ff_siwis traité**. Lequel garder ?
+1. ~~**Voix**~~ **Tranché le 16 octobre 2026 : Kokoro ff_siwis brut**, sans traitement (`"fx": false` dans le bloc
+   `tts`). L'utilisateur la trouve encore « assez synthétique ». Piste : sa machine a une **RTX 5070 Ti (16 Go)**,
+   ce qui permet de tester des voix neuronales plus naturelles. Candidat principal : **Chatterbox Multilingual**
+   (Resemble AI, licence MIT donc usage commercial permis, gère le français, clonage de voix). À éviter pour une
+   chaîne monétisée : XTTS-v2 et Fish Speech, dont les licences interdisent l'usage commercial. Leurs modèles sont
+   sur Hugging Face, ce qui est accessible en local mais bloqué en session cloud.
+   Extraits d'origine (Kokoro ff_siwis brut, Kokoro traité, Piper siwis, Piper tom, Piper upmc 0 et 1) : `out\voix\`. La v2 utilise **Kokoro ff_siwis traité**. Lequel garder ?
    Pour les régénérer : voir « Régénérer le casting voix » plus bas.
 2. **Rythme** : trop rapide, trop lent, ou bon ?
 3. **Musique et bruitages** : volume et style.
@@ -63,7 +68,13 @@ Claude ne peut pas écouter l'audio. Ces quatre points bloquent la suite du peau
 La session a été rapatriée du cloud sur `E:\Dev\curio-studio` le 16 octobre 2026.
 
 Déjà présent : Node 24, npm 11, Python 3.13 (`python`, pas `python3`), winget.
-Manquant au moment de la reprise : **ffmpeg**, les dépendances npm/pip et les modèles de voix.
+**Installation faite le 16 octobre 2026** : ffmpeg 9.0.2 (winget), dépendances npm/pip, modèles de voix.
+Les 6 extraits de voix sont dans `out\voix\` et la vidéo v2 dans `out\ciel-violet.mp4` (51,6 s).
+
+Piège Windows : Python lit les fichiers en cp1252 par défaut. Toute lecture ou écriture de texte doit préciser
+`encoding="utf-8"`, sinon Kokoro reçoit « lumiÃ¨re » et la vidéo passe de 52 s à 78 s (bug corrigé dans
+`build_audio.py`). Les `.ps1` sont enregistrés en UTF-8 **avec BOM**, sinon PowerShell 5.1 affiche mal les accents.
+Après l'installation de ffmpeg, un terminal déjà ouvert ne le voit pas : rouvrir le terminal, ou recharger le PATH.
 
 Installation, une seule fois, dans PowerShell :
 ```powershell
@@ -110,3 +121,6 @@ Pour changer la voix de l'épisode, modifier le bloc `tts` dans `episodes/<slug>
 - **16 octobre 2026, session cloud** (`session_01T4SdFrfiVPrRMRGNCbEohu`) : stratégie, abandon du trading,
   construction du pipeline, épisode 1 en v1 puis v2, dépôt GitHub `clevetdev/curio-studio`.
 - **16 octobre 2026, terminal local** : rapatriement via `claude --teleport`, scripts Windows, ce journal.
+- **16 octobre 2026, application de bureau (local)** : installation complète sur Windows, correction du bug
+  d'encodage, régénération du casting voix et de la v2, envoyés à l'utilisateur pour les 4 retours en attente.
+  L'utilisateur préfère être tutoyé, avec un ton détendu.

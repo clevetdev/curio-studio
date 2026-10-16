@@ -19,7 +19,7 @@ SCENE_GAP = 0.30  # pause entre deux scènes
 TAIL = 0.6
 
 ep = Path(sys.argv[1])
-script = json.loads((ep / "script.json").read_text())
+script = json.loads((ep / "script.json").read_text(encoding="utf-8"))
 cfg = script["tts"]
 rng = np.random.default_rng(7)
 
@@ -152,8 +152,9 @@ Path("build").mkdir(exist_ok=True)
 sf.write("build/voice_raw.wav", voice, SR)
 FX = ("highpass=f=75,equalizer=f=250:t=q:w=1:g=-2,equalizer=f=3500:t=q:w=1.2:g=3,equalizer=f=9500:t=q:w=1:g=2,"
       "acompressor=threshold=-20dB:ratio=3:attack=5:release=80:makeup=2,aecho=0.8:0.4:35|60:0.06|0.035")
-subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", "build/voice_raw.wav", "-af", FX, "-ar", str(SR), "build/voice_fx.wav"], check=True)
-voice, _ = sf.read("build/voice_fx.wav")
+if cfg.get("fx", True):  # "fx": false dans script.json → voix brute
+    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", "build/voice_raw.wav", "-af", FX, "-ar", str(SR), "build/voice_fx.wav"], check=True)
+    voice, _ = sf.read("build/voice_fx.wav")
 voice = np.pad(voice, (0, max(0, N - len(voice))))[:N]
 voice /= np.abs(voice).max()
 
@@ -298,5 +299,5 @@ for a, b in zip(captions, captions[1:]):  # pas de trou court entre deux groupes
 
 Path("public/timeline.json").write_text(json.dumps({
     "title": script["title"], "fps": FPS, "durationInFrames": int(np.ceil(total * FPS)),
-    "scenes": scenes, "captions": captions}, ensure_ascii=False, indent=1))
+    "scenes": scenes, "captions": captions}, ensure_ascii=False, indent=1), encoding="utf-8")
 print(f"{total:.1f}s · {len(scenes)} scènes · {len(words)} mots · {len(captions)} sous-titres")
